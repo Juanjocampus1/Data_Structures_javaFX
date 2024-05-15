@@ -31,6 +31,7 @@ public class HelloController {
 
     private ArrayList<String> lista = new ArrayList<String>();
     private Set<String> conjunto = new TreeSet<String>();
+    // TextField para ingresar los goles
 
     @FXML
     private ComboBox<String> cb_jugadores; // ComboBox para seleccionar los jugadores
@@ -38,8 +39,10 @@ public class HelloController {
     private TextField txt_goles; // TextField para ingresar los goles
     @FXML
     private ListView<String> lv_clasificacion; // ListView para mostrar la clasificación
+    @FXML
+    private ComboBox<String> cb_jornadas; // Nuevo ComboBox para seleccionar la jornada
 
-    private Map<String, Integer> golesJugadores = new HashMap<>();
+    private Map<String, Map<String, Integer>> golesJugadores = new HashMap<>(); // Map para almacenar los goles de los jugadores y la jornada
 
     @FXML
     protected void agregarAL() {
@@ -90,6 +93,8 @@ public class HelloController {
         timeline.play();
 
         cb_jugadores.setItems(FXCollections.observableArrayList("AGRAMONTE ESTEVEZ", "RAFAEL ENRIQUE", "AMADOR ARANGO", "ANUAR DAVID", "CEVALLOS JIMENEZ"));
+        cb_jornadas.setItems(FXCollections.observableArrayList("Jornada 1", "Jornada 2", "Jornada 3", "Jornada 4", "Jornada 5"));
+
     }
 
     private void updateCount() {
@@ -137,10 +142,13 @@ public class HelloController {
     @FXML
     protected void agregarGoles() {
         String jugador = cb_jugadores.getValue();
+        String jornada = cb_jornadas.getValue();
         int goles = Integer.parseInt(txt_goles.getText());
 
-        // Agregar o actualizar los goles del jugador
-        golesJugadores.put(jugador, golesJugadores.getOrDefault(jugador, 0) + goles);
+        // Agregar o actualizar los goles del jugador en la jornada seleccionada
+        Map<String, Integer> golesPorJornada = golesJugadores.getOrDefault(jugador, new HashMap<>());
+        golesPorJornada.put(jornada, golesPorJornada.getOrDefault(jornada, 0) + goles);
+        golesJugadores.put(jugador, golesPorJornada);
 
         txt_goles.clear();
     }
@@ -148,13 +156,16 @@ public class HelloController {
     @FXML
     protected void mostrarClasificacion() {
         // Ordenar los jugadores por goles en orden descendente
-        List<Map.Entry<String, Integer>> clasificacion = new ArrayList<>(golesJugadores.entrySet());
-        clasificacion.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+        List<Map.Entry<String, Map<String, Integer>>> clasificacion = new ArrayList<>(golesJugadores.entrySet());
+        clasificacion.sort((e1, e2) -> e2.getValue().values().stream().reduce(0, Integer::sum).compareTo(e1.getValue().values().stream().reduce(0, Integer::sum)));
 
         // Mostrar los tres primeros jugadores en el ListView
         List<String> top3 = new ArrayList<>();
         for (int i = 0; i < Math.min(3, clasificacion.size()); i++) {
-            top3.add(clasificacion.get(i).getKey() + ": " + clasificacion.get(i).getValue() + " goles");
+            String jugador = clasificacion.get(i).getKey();
+            int goles = clasificacion.get(i).getValue().values().stream().reduce(0, Integer::sum);
+            String jornadas = String.join(", ", clasificacion.get(i).getValue().keySet());
+            top3.add(jugador + ": " + goles + " goles (Jornadas: " + jornadas + ")");
         }
         lv_clasificacion.setItems(FXCollections.observableArrayList(top3));
     }
