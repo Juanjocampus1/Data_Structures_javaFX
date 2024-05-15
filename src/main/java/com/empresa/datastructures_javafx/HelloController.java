@@ -2,6 +2,8 @@ package com.empresa.datastructures_javafx;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,8 +28,6 @@ public class HelloController {
     private ListView<String> Mostrar;
     @FXML
     private Label lbl_time; // Nuevo Label para la fecha y hora
-    @FXML
-    private Button btn_sort;
 
     private ArrayList<String> lista = new ArrayList<String>();
     private Set<String> conjunto = new TreeSet<String>();
@@ -38,7 +38,13 @@ public class HelloController {
     @FXML
     private TextField txt_goles; // TextField para ingresar los goles
     @FXML
-    private ListView<String> lv_clasificacion; // ListView para mostrar la clasificación
+    private TableView<Map.Entry<String, Map<String, Integer>>> tv_clasificacion; // Nuevo TableView para mostrar la clasificación
+    @FXML
+    private TableColumn<Map.Entry<String, Map<String, Integer>>, String> col_jugador; // Columna para el nombre del jugador
+    @FXML
+    private TableColumn<Map.Entry<String, Map<String, Integer>>, Integer> col_goles; // Columna para los goles
+    @FXML
+    private TableColumn<Map.Entry<String, Map<String, Integer>>, String> col_jornadas; // Columna para las jornadas // ListView para mostrar la clasificación
     @FXML
     private ComboBox<String> cb_jornadas; // Nuevo ComboBox para seleccionar la jornada
 
@@ -162,15 +168,11 @@ public class HelloController {
         List<Map.Entry<String, Map<String, Integer>>> clasificacion = new ArrayList<>(golesJugadores.entrySet());
         clasificacion.sort((e1, e2) -> e2.getValue().values().stream().reduce(0, Integer::sum).compareTo(e1.getValue().values().stream().reduce(0, Integer::sum)));
 
-        // Mostrar los tres primeros jugadores en el ListView
-        List<String> top3 = new ArrayList<>();
-        for (int i = 0; i < Math.min(3, clasificacion.size()); i++) {
-            String jugador = clasificacion.get(i).getKey();
-            int goles = clasificacion.get(i).getValue().values().stream().reduce(0, Integer::sum);
-            String jornadas = String.join(", ", clasificacion.get(i).getValue().keySet());
-            top3.add(jugador + ": " + goles + " goles (Jornadas: " + jornadas + ")");
-        }
-        lv_clasificacion.setItems(FXCollections.observableArrayList(top3));
+        // Mostrar los jugadores en el TableView
+        tv_clasificacion.setItems(FXCollections.observableArrayList(clasificacion));
+        col_jugador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getKey()));
+        col_goles.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getValue().values().stream().reduce(0, Integer::sum)).asObject());
+        col_jornadas.setCellValueFactory(cellData -> new SimpleStringProperty(String.join(", ", cellData.getValue().getValue().keySet())));
     }
 
     @FXML

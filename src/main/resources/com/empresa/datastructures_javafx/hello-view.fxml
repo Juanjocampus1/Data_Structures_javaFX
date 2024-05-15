@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="438.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.empresa.datastructures_javafx.HelloController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.empresa.datastructures_javafx.HelloController">
   <tabs>
     <Tab text="List">
       <content>
@@ -45,14 +45,20 @@
           <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                   <children>
-                      <TextField fx:id="txt_jugador" layoutX="30.0" layoutY="30.0" /> <!-- Nuevo TextField para ingresar el nombre del jugador -->
-                      <Button layoutX="200.0" layoutY="30.0" mnemonicParsing="false" onAction="#agregarJugador" text="Agregar jugador" /> <!-- Nuevo botón para agregar el jugador -->
+                      <TextField fx:id="txt_jugador" layoutX="30.0" layoutY="30.0" />
+                      <Button layoutX="200.0" layoutY="30.0" mnemonicParsing="false" onAction="#agregarJugador" text="Agregar jugador" />
                       <ComboBox fx:id="cb_jugadores" layoutX="30.0" layoutY="70.0" />
                       <ComboBox fx:id="cb_jornadas" layoutX="30.0" layoutY="110.0" />
                       <TextField fx:id="txt_goles" layoutX="30.0" layoutY="150.0" />
                       <Button layoutX="30.0" layoutY="190.0" mnemonicParsing="false" onAction="#agregarGoles" text="Agregar goles" />
                       <Button layoutX="150.0" layoutY="190.0" mnemonicParsing="false" onAction="#mostrarClasificacion" text="Clasificación" />
-                      <ListView fx:id="lv_clasificacion" layoutX="30.0" layoutY="230.0" prefHeight="200.0" prefWidth="200.0" />
+                      <TableView fx:id="tv_clasificacion" layoutX="30.0" layoutY="230.0" prefHeight="200.0" prefWidth="241.0"> <!-- Nuevo TableView para mostrar la clasificación -->
+                          <columns>
+                              <TableColumn fx:id="col_jugador" text="Jugador" />
+                              <TableColumn fx:id="col_goles" text="Goles" />
+                              <TableColumn fx:id="col_jornadas" text="Jornadas" />
+                          </columns>
+                      </TableView>
                   </children>
               </AnchorPane>
           </content>
