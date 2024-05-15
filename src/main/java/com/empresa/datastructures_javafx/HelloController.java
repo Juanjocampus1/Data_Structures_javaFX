@@ -45,6 +45,9 @@ public class HelloController {
     private Map<String, Map<String, Integer>> golesJugadores = new HashMap<>(); // Map para almacenar los goles de los jugadores y la jornada
 
     @FXML
+    private TextField txt_jugador;
+
+    @FXML
     protected void agregarAL() {
         lista.add(txt_dato.getText());
         txt_dato.clear();
@@ -168,5 +171,15 @@ public class HelloController {
             top3.add(jugador + ": " + goles + " goles (Jornadas: " + jornadas + ")");
         }
         lv_clasificacion.setItems(FXCollections.observableArrayList(top3));
+    }
+
+    @FXML
+    protected void agregarJugador() {
+        String jugador = txt_jugador.getText();
+
+        // Agregar el jugador al ComboBox
+        cb_jugadores.getItems().add(jugador);
+
+        txt_jugador.clear();
     }
 }
